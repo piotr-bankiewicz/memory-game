@@ -28,11 +28,11 @@
 }
 
 .card__face--front {
-  background: rgb(190, 190, 190);
+  background: rgb(255, 241, 222);
 }
 
 .card__face--back {
-  background: rgb(190, 190, 190);
+  background: rgb(255, 241, 222);
   transform: rotateY(180deg);
 }
 

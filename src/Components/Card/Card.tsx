@@ -8,8 +8,8 @@ export interface CardProps {
   animationDelay?: string;
   flip: (index: number) => void;
   index: number;
-  onRef?: any;
   displaySymbol?: boolean;
+  disabled: boolean;
 }
 
 const Card = (props: CardProps) => {
