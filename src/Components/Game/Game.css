@@ -16,7 +16,7 @@ body {
     opacity: 1;
   }
   50% {
-    width: 0.5vmin;
+    width: 0.8vmin;
     opacity: 1;
   }
   100% {
@@ -28,9 +28,9 @@ body {
 .firework,
 .firework::before,
 .firework::after {
-  --initialSize: 0.5vmin;
-  --finalSize: 45vmin;
-  --particleSize: 0.2vmin;
+  --initialSize: 0.8vmin;
+  --finalSize: 80vmin;
+  --particleSize: 0.5vmin;
   --color1: yellow;
   --color2: khaki;
   --color3: white;

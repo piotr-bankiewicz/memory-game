@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card, { CardProps } from "../Card/Card";
+import ControlPanel from "../ControlPanel/ControlPanel";
 import "./Game.css";
 
 const Symbols: string[] = ["🦑", "🧳", "🦜", "🦴", "👾", "🧶", "🎩", "👑", "🐸", "🌵", "🍁", "🔥", "❄️", "🍬", "🥑", "🏀", "🚗", "❤️", "🦤", "🪶"];
@@ -104,7 +105,7 @@ function Game() {
       {Fireworks.map((item, index) => {
         return <div key={index} className={`${gameWon ? "firework" : ""}`}></div>;
       })}
-
+      <ControlPanel />
       <button onClick={startGame} disabled={gameActive}>
         Start game
       </button>
@@ -144,13 +145,10 @@ const utils = {
     let currentIndex = array.length,
       randomIndex;
 
-    // While there remain elements to shuffle.
     while (currentIndex !== 0) {
-      // Pick a remaining element.
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
-      // And swap it with the current element.
       [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
     }
 

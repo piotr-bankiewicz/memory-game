@@ -1,0 +1,63 @@
+.bt {
+  display: block;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  font-family: sans-serif;
+  text-decoration: none;
+  color: #333;
+  border: 2px solid #333;
+  letter-spacing: 2px;
+  text-align: center;
+  position: relative;
+  transition: all 0.35s;
+  cursor: pointer;
+}
+
+.bt span {
+  position: relative;
+  z-index: 2;
+}
+
+.bt:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+
+  transition: all 0.35s;
+}
+
+.bt:hover:after {
+  width: 100%;
+}
+
+.green-background {
+  background: #83ff83;
+}
+
+.green-background:after {
+  background: #67d667;
+}
+
+.red-background {
+  background: #f77e7e;
+}
+
+.red-background:after {
+  background: #f74a4a;
+}
+
+.disabled {
+  color: #333 !important;
+  border: 2px solid #333 !important;
+  background-color: rgb(158, 158, 158) !important;
+  cursor: default;
+}
+
+.disabled:hover:after {
+  width: 0% !important;
+}
