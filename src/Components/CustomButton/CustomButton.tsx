@@ -14,8 +14,10 @@ export interface CustomButtonProps {
 
 const CustomButton = (props: CustomButtonProps) => {
   return (
-    <div className={`bt ${props.style} ${props.disabled ? "disabled" : ""}`} onClick={props.onClick}>
-      <span>{props.text}</span>
+    <div style={{ padding: "5px" }}>
+      <div className={`bt ${props.style} ${props.disabled ? "disabled" : ""}`} onClick={!props.disabled ? props.onClick : undefined}>
+        <span>{props.text}</span>
+      </div>
     </div>
   );
 };

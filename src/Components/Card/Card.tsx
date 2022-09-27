@@ -1,15 +1,17 @@
 import "./Card.css";
+import React from "react";
 
 export interface CardProps {
   isFlipped?: boolean;
   symbol?: string;
-  keyValue: number;
+  keyValue: string;
   animate?: boolean;
   animationDelay?: string;
   flip: (index: number) => void;
   index: number;
   displaySymbol?: boolean;
   disabled: boolean;
+  matched: boolean;
 }
 
 const Card = (props: CardProps) => {
@@ -21,6 +23,7 @@ const Card = (props: CardProps) => {
     return result;
   };
 
+  console.log("card rendered ", props.index);
   return (
     <>
       <div key={props.keyValue} className="scene">
@@ -33,4 +36,4 @@ const Card = (props: CardProps) => {
   );
 };
 
-export default Card;
+export default React.memo(Card);
