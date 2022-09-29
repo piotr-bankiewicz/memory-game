@@ -12,7 +12,6 @@ const CustomDropDown = (props: CustomDropDownProps) => {
   useEffect(() => {
     const closeDropdownClick = () => {
       setVisibleDropdown(false);
-      console.log("windowClick");
     };
     if (visibleDropDown) window.addEventListener("click", closeDropdownClick);
     else window.removeEventListener("click", closeDropdownClick);

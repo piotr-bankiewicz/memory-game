@@ -23,7 +23,6 @@ const Card = (props: CardProps) => {
     return result;
   };
 
-  console.log("card rendered ", props.index);
   return (
     <>
       <div key={props.keyValue} className="scene">

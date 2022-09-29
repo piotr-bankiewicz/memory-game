@@ -2,7 +2,6 @@ import useCountdown from "../../Hooks/CountDown";
 import { GameState } from "../Game/Game";
 
 const TimerDisplay = (props: { minutes: string; seconds: string }) => {
-  console.log(props);
   return (
     <div className="fancy-text font-size-10vmin" style={{ width: "100%", display: "flex", justifyContent: "center" }}>
       <div>{props.minutes}</div>:<div>{props.seconds}</div>
