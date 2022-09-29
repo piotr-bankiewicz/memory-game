@@ -15,6 +15,10 @@
   cursor: pointer;
 }
 
+.bt-wrapper {
+  padding: 5px;
+}
+
 .bt span {
   position: relative;
   z-index: 2;
@@ -27,7 +31,6 @@
   left: 0;
   width: 0;
   height: 100%;
-
   transition: all 0.35s;
 }
 
@@ -36,19 +39,19 @@
 }
 
 .green-background {
-  background: #83ff83;
-}
-
-.green-background:after {
   background: #67d667;
 }
 
+.green-background:after {
+  background: #83ff83;
+}
+
 .red-background {
-  background: #f77e7e;
+  background: #f74a4a;
 }
 
 .red-background:after {
-  background: #f74a4a;
+  background: #f77e7e;
 }
 
 .disabled {

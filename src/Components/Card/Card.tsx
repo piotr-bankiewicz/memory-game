@@ -2,13 +2,13 @@ import "./Card.css";
 import React from "react";
 
 export interface CardProps {
-  isFlipped?: boolean;
-  symbol?: string;
   keyValue: string;
+  index: number;
+  isFlipped?: boolean;
+  flip: (index: number) => void;
   animate?: boolean;
   animationDelay?: string;
-  flip: (index: number) => void;
-  index: number;
+  symbol?: string;
   displaySymbol?: boolean;
   disabled: boolean;
   matched: boolean;

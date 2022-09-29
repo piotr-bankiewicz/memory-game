@@ -17,7 +17,6 @@ const useCountdown = (props: { seconds: number; gameState: GameState }) => {
 };
 
 const getReturnValues = (countDown: number): [minutes: string, seconds: string, countDown: number] => {
-  // calculate time left
   const minutes: string = pad(Math.floor(countDown / 60), 2);
   const seconds: string = pad(countDown % 60, 2);
 

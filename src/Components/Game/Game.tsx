@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useReducer, useState } from "react";
 import { ActionTypes } from "../../State/Card.actions";
 import Card, { CardProps } from "../Card/Card";
 import ControlPanel from "../ControlPanel/ControlPanel";
@@ -6,7 +6,9 @@ import { ButtonStyles } from "../CustomButton/CustomButton";
 import "./Game.css";
 import { v4 as uuidv4 } from "uuid";
 import { CardReducer } from "../../State/Card.reducer";
-import useCountdown from "../../Tools/CountDown";
+import Timer from "../Timer/Timer";
+import DifficultyChanger from "../CustomDropDownItems/DifficultyChanger/DifficultyChanger";
+import TimeLimit from "../CustomDropDownItems/TimeLimit/TimeLimit";
 
 export const Symbols: string[] = ["🦑", "🧳", "🦜", "🦴", "👾", "🧶", "🎩", "👑", "🐸", "🌵", "🍁", "🔥", "❄️", "🍬", "🥑", "🏀", "🚗", "❤️", "🦤", "🪶"];
 const Fireworks: number[] = Array(6).fill(0);
@@ -33,30 +35,7 @@ export const getGameDefaultState = (cardsCount: number): CardProps[] => {
   return result;
 };
 
-const DateTimeDisplay = (props: { value: string; type: string }) => {
-  return <div>{props.value}</div>;
-};
-
-const ShowCounter = (props: { minutes: string; seconds: string }) => {
-  console.log(props);
-  return (
-    <div className="fancy-text font-size-10vmin" style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-      <DateTimeDisplay value={props.minutes} type={"m"} />:<DateTimeDisplay value={props.seconds} type={"s"} />
-    </div>
-  );
-};
-
-const CountdownTimer = (props: { targetTime: number; gameState: GameState; onGameEnd: () => void; visible: boolean }) => {
-  const [minutes, seconds, countDown] = useCountdown({ seconds: props.targetTime, gameState: props.gameState });
-
-  if (countDown <= 0 && props.gameState === GameState.ACTIVE) {
-    props.onGameEnd();
-  }
-  if (props.visible) return <ShowCounter minutes={minutes} seconds={seconds} />;
-  else return <></>;
-};
-
-const EndGameText = (props: { gameState: GameState }) => {
+const EndGameInfo = (props: { gameState: GameState }) => {
   if (props.gameState === GameState.WON) {
     return <div className="fancy-text font-size-10vmin">You Won!</div>;
   } else if (props.gameState === GameState.TIMEOUT) {
@@ -70,8 +49,8 @@ function Game() {
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>(DifficultyLevel.EASY);
   const [cardStates, dispatch] = useReducer(CardReducer, getGameDefaultState(difficultyLevel));
   const [gameState, setGameState] = useState<GameState>(GameState.INACTIVE);
-  const [timeLimitValue, setTimeLimitValue] = useState<string>("");
-  const [timeLimit, setTimeLimit] = useState<boolean>(false);
+  const [timerValue, setTimeValue] = useState<string>("");
+  const [timerEnabled, setTimerEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     let selectedCards: CardProps[] = cardStates.filter((x) => x.isFlipped && !x.matched);
@@ -93,8 +72,9 @@ function Game() {
       .toString()
       .replace(/\D/g, "")
       .match(/[1-9][0-9]{0,2}/);
-    setTimeLimitValue(valuePrepared ? valuePrepared[0] : "");
+    setTimeValue(valuePrepared ? valuePrepared[0] : "");
   };
+
   const unflipCards = (cardsToFlip: CardProps[]) => {
     cardsToFlip.forEach((element) => {
       dispatch({ type: ActionTypes.FLIP, payload: { animate: false, displaySymbol: true, disabled: false, flip: false, index: element.index, force: true, matched: false } });
@@ -139,6 +119,13 @@ function Game() {
     dispatch({ type: ActionTypes.TIMEOUT });
   };
 
+  const onTimeLimitChange = (value: boolean) => {
+    setTimerEnabled(value);
+  };
+
+  const DifficultyChangerInstance: ReactNode = DifficultyChanger({ currentDifficultyLevel: difficultyLevel, onDifficultyChange: onDifficultyChange });
+  const TimeLimitInstance: ReactNode = TimeLimit({ onSetTimeLimit: handleTimeInputChange, timeLimitValue: timerValue, timeLimitEnabled: timerEnabled, onTimeLimitChange });
+
   return (
     <div>
       {Fireworks.map((item, index) => {
@@ -146,20 +133,13 @@ function Game() {
       })}
       <ControlPanel
         ButtonConfigs={[
-          { disabled: gameState !== GameState.INACTIVE, style: ButtonStyles.Green, text: "Start Game", onClick: startGame },
+          { disabled: gameState !== GameState.INACTIVE || (timerEnabled && timerValue === ""), style: ButtonStyles.Green, text: "Start Game", onClick: startGame },
           { disabled: gameState === GameState.INACTIVE, style: ButtonStyles.Red, text: "Reset", onClick: resetGame },
         ]}
-        onDifficultyChange={onDifficultyChange}
-        difficultyLevel={difficultyLevel}
+        customDropDownItems={[DifficultyChangerInstance, TimeLimitInstance]}
         disabled={gameState !== GameState.INACTIVE}
-        onSetTimeLimit={handleTimeInputChange}
-        timeLimitValue={timeLimitValue}
-        timeLimit={timeLimit}
-        onTimeLimitChange={(value: boolean) => {
-          setTimeLimit(value);
-        }}
       />
-      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+      <div className="cards-wrapper">
         {cardStates.map((item, index) => {
           return (
             <React.Fragment key={item.keyValue}>
@@ -170,43 +150,13 @@ function Game() {
         })}
       </div>
       <div>
-        {timeLimit && gameState !== GameState.WON && gameState !== GameState.TIMEOUT && (
-          <CountdownTimer gameState={gameState} targetTime={Number(timeLimitValue)} onGameEnd={timeoutGame} visible={timeLimit} key={gameState} />
+        {timerEnabled && gameState !== GameState.WON && gameState !== GameState.TIMEOUT && (
+          <Timer gameState={gameState} targetTime={Number(timerValue)} onGameEnd={timeoutGame} visible={timerEnabled} key={gameState} />
         )}
       </div>
-      <EndGameText gameState={gameState} />
+      <EndGameInfo gameState={gameState} />
     </div>
   );
 }
 
 export default Game;
-
-export const utils = {
-  searchRandom: (count: number, arr: string[]) => {
-    let answer: string[] = [],
-      counter = 0;
-
-    while (counter < count) {
-      let rand = arr[Math.floor(Math.random() * arr.length)];
-      if (!answer.some((an) => an === rand)) {
-        answer.push(rand);
-        counter++;
-      }
-    }
-    return answer;
-  },
-
-  shuffle: (array: CardProps[]) => {
-    let currentIndex = array.length,
-      randomIndex;
-
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
-  },
-};
